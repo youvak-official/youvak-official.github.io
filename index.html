@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>🎄 YuvaFiesta 2025 Entry Pass 🎟️</title>
+<link rel="icon" href="youvak.jpg" type="image/x-icon">
+<title>YuvaFiesta 2025 Entry Pass 🎄 </title>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <style>
@@ -16,7 +17,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 40px;
+    padding: 20px;
     overflow-x: hidden;
   }
   
@@ -69,7 +70,8 @@
   
   input[type="text"],
   input[type="email"],
-  input[type="date"] {
+  input[type="number"],
+  #gender {
     width: 100%;
     padding: 12px 14px;
     border-radius: 10px;
@@ -205,7 +207,7 @@
 <div class="card">
   <!-- Registration Form -->
   <div id="formSection">
-    <h1>Christmas Event Pass</h1>
+    <h1>Yuva Fiesta 2025 Entry Pass</h1>
     <p class="lead">Celebrate the joy of Christmas! Choose your day(s), pay securely, and get your event pass.</p>
 
     <form id="ticketForm">
@@ -215,13 +217,23 @@
       <label>Email</label>
       <input id="email" type="email" required/>
 
-      <label>Date of Birth</label>
-      <input id="dob" type="date" required/>
+      <label>Age</label>
+      <input id="age" type="number" required/>
+
+      <label for="gender">Gender</label>
+      <select name="gender" id="gender">
+        <option value="">--Please choose an option--</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+
+      <label>Address</label>
+      <input id="address" type="text" required/>
 
       <label>Select Day(s)</label>
       <div class="days">
-        <label><input type="checkbox" id="day1"> Day 1</label>
-        <label><input type="checkbox" id="day2"> Day 2</label>
+        <label><input type="checkbox" id="day1"> Day 1 (27th December)</label>
+        <label><input type="checkbox" id="day2"> Day 2 (28th December)</label>
       </div>
 
       <div class="amount-label" id="amountLabel">Amount: ₹0</div>
@@ -268,7 +280,7 @@ for (let i=0; i<25; i++){
 
 // 🎟 CONFIG
 const RAZORPAY_KEY_ID = "rzp_test_RYMx3hLsfmMAOq";
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwPbG-I_nZQsfu6YvWqMb7K_8rf6BM6-JzfPlho1lAHwSSA1ofW9a53YwvAT_2vBBSmEw/exec";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwPbG-I_nZQsfu6YvWqMb7K_8rf6BM6-JzfPlho1lAHwSSA1ofW9a53YwvAT_2vBBSmEw/exec"
 
 // 💰 Amount calculator
 const d1 = document.getElementById('day1');
@@ -286,9 +298,11 @@ d1.onchange = d2.onchange = updateAmount;
 document.getElementById('payBtn').onclick = async function(){
   const name=document.getElementById('fullName').value.trim();
   const email=document.getElementById('email').value.trim();
-  const dob=document.getElementById('dob').value;
+  const age=document.getElementById('age').value;
+  const gender=document.getElementById('gender').value;
+  const address=document.getElementById('address').value;
 
-  if(!name||!email||!dob){alert("Fill all details");return;}
+  if(!name||!email||!age||!gender||!address){alert("Fill all details");return;}
   if(!d1.checked && !d2.checked){alert("Select at least one day");return;}
   const amount=(d1.checked && d2.checked)?200:100;
 
@@ -303,7 +317,9 @@ document.getElementById('payBtn').onclick = async function(){
       storeToSheet({
         fullName:name,
         email,
-        dob,
+        age,
+        gender,
+        address,
         day1:d1.checked,
         day2:d2.checked,
         amount,
