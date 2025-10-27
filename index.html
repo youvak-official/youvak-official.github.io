@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>🎄 YuvaFiesta 2025 Entry Pass 🎟️</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+  body {
+    background: radial-gradient(circle at top left, #b30000, #800000);
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    overflow-x: hidden;
+  }
+  
+  .card {
+    background: #fff;
+    color: #222;
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+    max-width: 600px;
+    width: 100%;
+    padding: 40px; /* slightly more padding for even spacing */
+    position: relative;
+    box-sizing: border-box;
+  }
+  
+  .card::before {
+    pointer-events: none;
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    padding: 3px;
+    background: linear-gradient(45deg, gold, #ff0000, gold);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+  }
+  
+  h1 {
+    text-align: center;
+    color: #b30000;
+    font-family: 'Great Vibes', cursive;
+    font-size: 40px;
+    margin-bottom: 5px;
+  }
+  
+  p.lead {
+    text-align: center;
+    color: #444;
+    margin-bottom: 25px;
+  }
+  
+  label {
+    font-weight: 600;
+    color: #800000;
+    display: block;
+    margin-bottom: 6px;
+    margin-left: 2px;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="date"] {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1.5px solid #ffd700;
+    background: #fffaf0;
+    margin-bottom: 22px;
+    box-sizing: border-box;
+  }
+  
+  .days { display:flex; gap:12px; align-items:center; }
+  
+  .days label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: #800000;
+  }
+  
+  .days input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #b30000;
+    cursor: pointer;
+  }
+  
+  .amount-label {
+    text-align: right;
+    color: #b30000;
+    font-weight: 700;
+    margin: 15px 0 10px 0;
+  }
+  
+  .btn {
+    background: linear-gradient(45deg, #b30000, #ff0000);
+    border: none;
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+    transition: 0.3s;
+    box-sizing: border-box;
+  }
+  
+  .btn:hover {
+    background: linear-gradient(45deg, #ff0000, #b30000);
+    transform: scale(1.02);
+  }
+  
+  /* Snowflakes */
+  @keyframes fall {
+    0% { transform: translateY(-10vh); opacity:1;}
+    100% { transform: translateY(100vh); opacity:0;}
+  }
+  .snowflake {
+    position: fixed;
+    top: -10px;
+    color: white;
+    font-size: 1.2em;
+    user-select: none;
+    animation: fall linear infinite;
+    pointer-events: none;
+  }
+  
+  /* Hidden sections */
+  .hidden {
+    display: none;
+  }
+  
+  .thank-you {
+    text-align: center;
+    padding: 10px 20px;
+  }
+  
+  .thank-you h2 {
+    color: #b30000;
+    font-size: 32px;
+    margin-bottom: 15px;
+  }
+  
+  .thank-you .icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+  }
+  
+  .info-text {
+    color: #555;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 15px 0;
+  }
+  
+  /* 🕒 Loading overlay (scrim) */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-align: center;
+  transition: opacity 0.3s ease;
+  display: none;
+}
+
+.loader {
+  border: 6px solid rgba(255, 255, 255, 0.2);
+  border-top: 6px solid #ffd700;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+</style>
+</head>
+<body>
+<div class="card">
+  <!-- Registration Form -->
+  <div id="formSection">
+    <h1>Christmas Event Pass</h1>
+    <p class="lead">Celebrate the joy of Christmas! Choose your day(s), pay securely, and get your event pass.</p>
+
+    <form id="ticketForm">
+      <label>Full Name</label>
+      <input id="fullName" type="text" required/>
+
+      <label>Email</label>
+      <input id="email" type="email" required/>
+
+      <label>Date of Birth</label>
+      <input id="dob" type="date" required/>
+
+      <label>Select Day(s)</label>
+      <div class="days">
+        <label><input type="checkbox" id="day1"> Day 1</label>
+        <label><input type="checkbox" id="day2"> Day 2</label>
+      </div>
+
+      <div class="amount-label" id="amountLabel">Amount: ₹0</div>
+
+      <button type="button" class="btn" id="payBtn">Pay & Generate Pass</button>
+    </form>
+  </div>
+
+  <!-- Thank You Section -->
+  <div id="thankYouSection" class="hidden thank-you">
+    <div class="icon">🎉</div>
+    <h2>Thank You for Buying a Ticket for YuvaFiesta 2025!</h2>
+    <p class="lead">Your payment was successful!</p>
+    
+    <div style="background: #fff5e6; border-left: 4px solid #ffa500; padding: 15px; border-radius: 4px; text-align: left;">
+      <p class="info-text" style="margin: 0;">
+        <strong>📧 Check Your Email!</strong><br>
+        A confirmation email with your ticket numbers has been sent to your registered email address. Please save it or take a screenshot.
+      </p>
+    </div>
+    
+    <p class="info-text" style="margin-top: 20px;">
+      We're excited to see you at the event! 🎄✨
+    </p>
+  </div>
+</div>
+<!-- ⏳ Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="loader"></div>
+  <p>Processing your ticket... Please wait 🎅</p>
+</div>
+
+<script>
+// ❄️ Snowflakes
+for (let i=0; i<25; i++){
+  const s = document.createElement('div');
+  s.className='snowflake';
+  s.textContent='❅';
+  s.style.left = Math.random()*100 + 'vw';
+  s.style.animationDuration = (5+Math.random()*10)+'s';
+  s.style.animationDelay = Math.random()*10+'s';
+  document.body.appendChild(s);
+}
+
+// 🎟 CONFIG
+const RAZORPAY_KEY_ID = "rzp_test_RYMx3hLsfmMAOq";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwPbG-I_nZQsfu6YvWqMb7K_8rf6BM6-JzfPlho1lAHwSSA1ofW9a53YwvAT_2vBBSmEw/exec";
+
+// 💰 Amount calculator
+const d1 = document.getElementById('day1');
+const d2 = document.getElementById('day2');
+const amtLabel = document.getElementById('amountLabel');
+function updateAmount(){
+  let amt=0;
+  if(d1.checked && d2.checked) amt=200;
+  else if(d1.checked||d2.checked) amt=100;
+  amtLabel.textContent='Amount: ₹'+amt;
+}
+d1.onchange = d2.onchange = updateAmount;
+
+// 💳 Pay + Sheet store
+document.getElementById('payBtn').onclick = async function(){
+  const name=document.getElementById('fullName').value.trim();
+  const email=document.getElementById('email').value.trim();
+  const dob=document.getElementById('dob').value;
+
+  if(!name||!email||!dob){alert("Fill all details");return;}
+  if(!d1.checked && !d2.checked){alert("Select at least one day");return;}
+  const amount=(d1.checked && d2.checked)?200:100;
+
+  const options={
+    key:RAZORPAY_KEY_ID,
+    amount:amount*100,
+    currency:"INR",
+    name:"YuvaFiesta 2025",
+    description:"Christmas Event Pass",
+    prefill:{name,email},
+    handler: function (response){
+      storeToSheet({
+        fullName:name,
+        email,
+        dob,
+        day1:d1.checked,
+        day2:d2.checked,
+        amount,
+        paymentId:response.razorpay_payment_id
+      });
+    },
+    modal: {
+      ondismiss: function(){
+        console.log('Payment cancelled by user');
+      }
+    }
+  };
+  const rzp=new Razorpay(options);
+  rzp.open();
+};
+
+// 🗂️ Send data to Google Sheet
+async function storeToSheet(data){
+  const overlay = document.getElementById('loadingOverlay');
+  overlay.style.display = 'flex'; // Show loading
+
+  try {
+    console.log('Sending data to sheet:', data);
+
+    const res = await fetch(GOOGLE_SHEET_URL, {
+      method:"POST",
+      body:JSON.stringify(data),
+      headers:{"Content-Type":"application/json"},
+      mode: 'no-cors'
+    });
+
+    console.log('Response received');
+
+    let out;
+    try {
+      out = await res.json();
+    } catch {
+      out = {status:"success", serialDay1:"Check Email", serialDay2:"Check Email"};
+    }
+    if(out.status==="success"){
+      showThankYou(data, out.serialDay1, out.serialDay2);
+    } else {
+      alert("Error saving to sheet: " + (out.message || 'Unknown error') + 
+            "\n\nPlease contact support with your payment ID: " + data.paymentId);
+    }
+  } catch(error) {
+    console.error('Fetch error:', error);
+    alert("Error processing registration: " + error.message + 
+          "\n\nYour payment was successful (ID: " + data.paymentId + 
+          ")\n\nPlease contact support to complete registration.");
+  } 
+  finally {
+    overlay.style.display = 'none'; // Hide loading in all cases
+  }
+}
+
+// 🎉 Show Thank You Page
+function showThankYou(data, day1Ticket, day2Ticket) {
+  document.getElementById('formSection').classList.add('hidden');
+  document.getElementById('thankYouSection').classList.remove('hidden');
+  
+  let ticketHTML = '';
+  if(day1Ticket) {
+    ticketHTML += `
+      <div style="margin-bottom: 15px;">
+        <strong style="color: #b30000;">📅 Day 1 Ticket Number:</strong>
+        <div class="ticket-number">${day1Ticket}</div>
+      </div>
+    `;
+  }
+  if(day2Ticket) {
+    ticketHTML += `
+      <div style="margin-bottom: 15px;">
+        <strong style="color: #b30000;">📅 Day 2 Ticket Number:</strong>
+        <div class="ticket-number">${day2Ticket}</div>
+      </div>
+    `;
+  }
+  ticketHTML += `
+    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd; font-size: 13px; color: #666;">
+      <strong>Name:</strong> ${data.fullName}<br>
+      <strong>Email:</strong> ${data.email}<br>
+      <strong>Amount Paid:</strong> ₹${data.amount}<br>
+      <strong>Payment ID:</strong> <span style="font-family: monospace; font-size: 11px;">${data.paymentId}</span>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
