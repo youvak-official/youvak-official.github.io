@@ -71,6 +71,7 @@
   input[type="text"],
   input[type="email"],
   input[type="number"],
+  input[type="tel"],
   #gender {
     width: 100%;
     padding: 12px 14px;
@@ -217,6 +218,10 @@
       <label>Email</label>
       <input id="email" type="email" required/>
 
+      <label>Contact Number</label>
+      <input id="contact" type="tel" pattern="[0-9]{10}" maxlength="10" required/>
+
+
       <label>Age</label>
       <input id="age" type="number" required/>
 
@@ -281,7 +286,7 @@ for (let i=0; i<25; i++){
 // 🎟 CONFIG
 const RAZORPAY_KEY_ID = "rzp_test_RYMx3hLsfmMAOq";
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwPbG-I_nZQsfu6YvWqMb7K_8rf6BM6-JzfPlho1lAHwSSA1ofW9a53YwvAT_2vBBSmEw/exec"
-  
+
 // 💰 Amount calculator
 const d1 = document.getElementById('day1');
 const d2 = document.getElementById('day2');
@@ -298,6 +303,7 @@ d1.onchange = d2.onchange = updateAmount;
 document.getElementById('payBtn').onclick = async function(){
   const name=document.getElementById('fullName').value.trim();
   const email=document.getElementById('email').value.trim();
+  const contact=document.getElementById('contact').value.trim();
   const age=document.getElementById('age').value;
   const gender=document.getElementById('gender').value;
   const address=document.getElementById('address').value;
@@ -317,6 +323,7 @@ document.getElementById('payBtn').onclick = async function(){
       storeToSheet({
         fullName:name,
         email,
+        contact,
         age,
         gender,
         address,
