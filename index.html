@@ -4,9 +4,8 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" href="youvak.jpg" type="image/x-icon">
-<title>YuvaFiesta 2025 Entry Pass 🎄 </title>
+<title>YuvaFiesta 2025 Entry Pass 🎄</title>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <style>
   body {
     background: radial-gradient(circle at top left, #b30000, #800000);
@@ -28,7 +27,7 @@
     box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
     max-width: 600px;
     width: 100%;
-    padding: 40px; /* slightly more padding for even spacing */
+    padding: 40px;
     position: relative;
     box-sizing: border-box;
   }
@@ -139,73 +138,10 @@
     animation: fall linear infinite;
     pointer-events: none;
   }
-  
-  /* Hidden sections */
-  .hidden {
-    display: none;
-  }
-  
-  .thank-you {
-    text-align: center;
-  }
-  
-  .thank-you h2 {
-    color: #b30000;
-    font-size: 32px;
-    margin-bottom: 15px;
-  }
-  
-  .thank-you .icon {
-    font-size: 80px;
-    margin-bottom: 20px;
-  }
-  
-  .info-text {
-    color: #555;
-    font-size: 14px;
-    line-height: 1.6;
-    margin: 15px 0;
-  }
-  
-  /* 🕒 Loading overlay (scrim) */
-.loading-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  color: #fff;
-  font-size: 18px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  text-align: center;
-  transition: opacity 0.3s ease;
-  display: none;
-}
-
-.loader {
-  border: 6px solid rgba(255, 255, 255, 0.2);
-  border-top: 6px solid #ffd700;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  animation: spin 1s linear infinite;
-  margin-bottom: 20px;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 </style>
 </head>
 <body>
 <div class="card">
-  <!-- Registration Form -->
   <div id="formSection">
     <h1>Yuva Fiesta 2025 Entry Pass</h1>
     <p class="lead">Step into magical winter evenings this Christmas as we screen a timeless Parish Classic under the stars. 🎬🎄❄️ <br> Choose your day(s), pay securely, and get your event pass.</p>
@@ -218,7 +154,6 @@
 
       <label>Contact Number</label>
       <input id="contact" type="tel" pattern="[0-9]{10}" maxlength="10" required/>
-
 
       <label>Age</label>
       <input id="age" type="number" required/>
@@ -241,32 +176,9 @@
 
       <div class="amount-label" id="amountLabel">Amount: ₹0</div>
 
-      <button type="button" class="btn" id="payBtn">Pay & Generate Pass</button>
+      <button type="button" class="btn" id="payBtn">Proceed to Payment</button>
     </form>
   </div>
-
-  <!-- Thank You Section -->
-  <div id="thankYouSection" class="hidden thank-you">
-    <div class="icon">🎉</div>
-    <h2>Thank You for Buying a Pass for YuvaFiesta 2025!</h2>
-    <p class="lead">Your payment was successful!</p>
-    
-    <div style="background: #fff5e6; border-left: 4px solid #ffa500; padding: 15px; border-radius: 4px; text-align: left;">
-      <p class="info-text" style="margin: 0;">
-        <strong>📧 Check Your Email!</strong><br>
-        A confirmation email with your pass numbers has been sent to your registered email address. Please save it or take a screenshot.
-      </p>
-    </div>
-    
-    <p class="info-text" style="margin-top: 20px;">
-      We're excited to see you at the event! 🎄✨
-    </p>
-  </div>
-</div>
-<!-- ⏳ Loading Overlay -->
-<div id="loadingOverlay" class="loading-overlay">
-  <div class="loader"></div>
-  <p>Processing your pass... Please wait 🎡</p>
 </div>
 
 <script>
@@ -281,9 +193,9 @@ for (let i=0; i<25; i++){
   document.body.appendChild(s);
 }
 
-// 🎟 CONFIG
-const RAZORPAY_KEY_ID = "rzp_test_Ra9C13CfuyGNh4";
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwXGGvNU-YUce-j_W1e9wLEoHDf-AbJ4FiWkdZF0_1gTQuaBBWOSTW5RFsDJQUS_UD8/exec"
+// 🎟 CONFIG - Update these with your actual details
+const UPI_ID = "8369565880@pthdfc"; // Replace with your UPI ID
+const UPI_NAME = "Candida%20Noronha"; // Replace with your name (URL encoded)
 
 // 💰 Amount calculator
 const d1 = document.getElementById('day1');
@@ -297,121 +209,53 @@ function updateAmount(){
 }
 d1.onchange = d2.onchange = updateAmount;
 
-// 💳 Pay + Sheet store
-document.getElementById('payBtn').onclick = async function(){
+// 💳 Proceed to Payment
+document.getElementById('payBtn').onclick = function(){
   const name=document.getElementById('fullName').value.trim();
   const email=document.getElementById('email').value.trim();
   const contact=document.getElementById('contact').value.trim();
   const age=document.getElementById('age').value;
   const gender=document.getElementById('gender').value;
-  const address=document.getElementById('address').value;
+  const address=document.getElementById('address').value.trim();
 
-  if(!name||!email||!age||!gender||!address){alert("Fill all details");return;}
-  if(!d1.checked && !d2.checked){alert("Select at least one day");return;}
+  if(!name||!email||!contact||!age||!gender||!address){
+    alert("Please fill all details");
+    return;
+  }
+  
+  if(!d1.checked && !d2.checked){
+    alert("Please select at least one day");
+    return;
+  }
+  
   const amount=(d1.checked && d2.checked)?200:100;
 
-  const options={
-    key:RAZORPAY_KEY_ID,
-    amount:amount*100,
-    currency:"INR",
-    name:"YuvaFiesta 2025",
-    description:"Christmas Event Pass",
-    prefill:{name,email},
-    handler: function (response){
-      storeToSheet({
-        fullName:name,
-        email,
-        contact,
-        age,
-        gender,
-        address,
-        day1:d1.checked,
-        day2:d2.checked,
-        amount,
-        paymentId:response.razorpay_payment_id
-      });
-    },
-    modal: {
-      ondismiss: function(){
-        console.log('Payment cancelled by user');
-      }
-    }
+  // Store form data in sessionStorage
+  const formData = {
+    fullName: name,
+    email: email,
+    contact: contact,
+    age: age,
+    gender: gender,
+    address: address,
+    day1: d1.checked,
+    day2: d2.checked,
+    amount: amount
   };
-  const rzp=new Razorpay(options);
-  rzp.open();
-};
-
-// 🗂️ Send data to Google Sheet
-async function storeToSheet(data){
-  const overlay = document.getElementById('loadingOverlay');
-  overlay.style.display = 'flex'; // Show loading
-
-  try {
-    console.log('Sending data to sheet:', data);
-
-    const res = await fetch(GOOGLE_SHEET_URL, {
-      method:"POST",
-      body:JSON.stringify(data),
-      headers:{"Content-Type":"application/json"},
-      mode: 'no-cors'
-    });
-
-    console.log('Response received');
-
-    let out;
-    try {
-      out = await res.json();
-    } catch {
-      out = {status:"success", serialDay1:"Check Email", serialDay2:"Check Email"};
-    }
-    if(out.status==="success"){
-      showThankYou(data, out.serialDay1, out.serialDay2);
-    } else {
-      alert("Error saving to sheet: " + (out.message || 'Unknown error') + 
-            "\n\nPlease contact support with your payment ID: " + data.paymentId);
-    }
-  } catch(error) {
-    console.error('Fetch error:', error);
-    alert("Error processing registration: " + error.message + 
-          "\n\nYour payment was successful (ID: " + data.paymentId + 
-          ")\n\nPlease contact support to complete registration.");
-  } 
-  finally {
-    overlay.style.display = 'none'; // Hide loading in all cases
-  }
-}
-
-// 🎉 Show Thank You Page
-function showThankYou(data, day1Ticket, day2Ticket) {
-  document.getElementById('formSection').classList.add('hidden');
-  document.getElementById('thankYouSection').classList.remove('hidden');
   
-  let ticketHTML = '';
-  if(day1Ticket) {
-    ticketHTML += `
-      <div style="margin-bottom: 15px;">
-        <strong style="color: #b30000;">📅 Day 1 Ticket Number:</strong>
-        <div class="ticket-number">${day1Ticket}</div>
-      </div>
-    `;
-  }
-  if(day2Ticket) {
-    ticketHTML += `
-      <div style="margin-bottom: 15px;">
-        <strong style="color: #b30000;">📅 Day 2 Ticket Number:</strong>
-        <div class="ticket-number">${day2Ticket}</div>
-      </div>
-    `;
-  }
-  ticketHTML += `
-    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd; font-size: 13px; color: #666;">
-      <strong>Name:</strong> ${data.fullName}<br>
-      <strong>Email:</strong> ${data.email}<br>
-      <strong>Amount Paid:</strong> ₹${data.amount}<br>
-      <strong>Payment ID:</strong> <span style="font-family: monospace; font-size: 11px;">${data.paymentId}</span>
-    </div>
-  `;
-}
+  sessionStorage.setItem('yuvaFiestaRegistration', JSON.stringify(formData));
+  
+  // Generate UPI payment link
+  const upiLink = `upi://pay?pa=${UPI_ID}&pn=${UPI_NAME}&am=${amount}.00&cu=INR&tn=YuvaFiesta%202025%20Pass`;
+  
+  // Open UPI payment
+  window.location.href = upiLink;
+  
+  // Redirect to upload page after a short delay
+  setTimeout(() => {
+    window.location.href = 'upload.html';
+  }, 2000);
+};
 </script>
 </body>
 </html>
