@@ -472,6 +472,11 @@ document.getElementById('proceedBtn').onclick = function(){
     return;
   }
   
+  if(contact.length !== 10 || !/^[0-9]{10}$/.test(contact)){
+    alert("Please enter a valid 10-digit contact number");
+    return;
+  }
+  
   if(!d1.checked && !d2.checked){
     alert("Please select at least one day");
     return;
