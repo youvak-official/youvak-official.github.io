@@ -53,6 +53,13 @@
     margin-bottom: 5px;
   }
   
+  h2 {
+    text-align: center;
+    color: #b30000;
+    font-size: 24px;
+    margin: 30px 0 15px 0;
+  }
+  
   p.lead {
     text-align: center;
     color: #444;
@@ -105,6 +112,91 @@
     margin: 15px 0 10px 0;
   }
   
+  .payment-section {
+    background: #fff5e6;
+    border: 2px solid #ffd700;
+    border-radius: 15px;
+    padding: 25px;
+    margin: 30px 0;
+    text-align: center;
+  }
+  
+  .qr-container {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    display: inline-block;
+    margin: 20px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  
+  .qr-code {
+    width: 200px;
+    height: 200px;
+    border: 3px solid #b30000;
+    border-radius: 10px;
+  }
+  
+  .payment-link {
+    display: inline-block;
+    background: linear-gradient(45deg, #b30000, #ff0000);
+    color: white;
+    padding: 12px 30px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    margin: 10px 0;
+    transition: 0.3s;
+  }
+  
+  .payment-link:hover {
+    background: linear-gradient(45deg, #ff0000, #b30000);
+    transform: scale(1.05);
+  }
+  
+  .upload-area {
+    border: 2px dashed #ffd700;
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    background: #fffaf0;
+    margin: 20px 0;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .upload-area:hover {
+    background: #fff5e6;
+    border-color: #b30000;
+  }
+  
+  .upload-area.dragover {
+    background: #ffe6e6;
+    border-color: #b30000;
+    transform: scale(1.02);
+  }
+  
+  .upload-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+  }
+  
+  #fileInput {
+    display: none;
+  }
+  
+  .preview-container {
+    margin: 20px 0;
+    text-align: center;
+  }
+  
+  .preview-image {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 10px;
+    border: 2px solid #ffd700;
+  }
+  
   .btn {
     background: linear-gradient(45deg, #b30000, #ff0000);
     border: none;
@@ -119,16 +211,71 @@
     box-sizing: border-box;
   }
   
-  .btn:hover {
+  .btn:hover:not(:disabled) {
     background: linear-gradient(45deg, #ff0000, #b30000);
     transform: scale(1.02);
   }
   
-  /* Snowflakes */
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .thank-you {
+    text-align: center;
+  }
+  
+  .thank-you .icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+  }
+  
+  .info-text {
+    color: #555;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 15px 0;
+  }
+  
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+    display: none;
+  }
+  
+  .loader {
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top: 6px solid #ffd700;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
   @keyframes fall {
     0% { transform: translateY(-10vh); opacity:1;}
     100% { transform: translateY(100vh); opacity:0;}
   }
+  
   .snowflake {
     position: fixed;
     top: -10px;
@@ -138,13 +285,20 @@
     animation: fall linear infinite;
     pointer-events: none;
   }
+  
+  .section-divider {
+    border-top: 2px dashed #ffd700;
+    margin: 30px 0;
+  }
 </style>
 </head>
 <body>
 <div class="card">
+  <!-- Form Section -->
   <div id="formSection">
     <h1>Yuva Fiesta 2025 Entry Pass</h1>
-    <p class="lead">Step into magical winter evenings this Christmas as we screen a timeless Parish Classic under the stars. 🎬🎄❄️ <br> Choose your day(s), pay securely, and get your event pass.</p>
+    <p class="lead">Step into magical winter evenings this Christmas as we screen a timeless Parish Classic under the stars. 🎬🎄❄️</p>
+    
     <form id="ticketForm">
       <label>Full Name</label>
       <input id="fullName" type="text" required/>
@@ -175,10 +329,90 @@
       </div>
 
       <div class="amount-label" id="amountLabel">Amount: ₹0</div>
-
-      <button type="button" class="btn" id="payBtn">Proceed to Payment</button>
     </form>
+
+    <div class="section-divider"></div>
+
+    <!-- Payment Section -->
+    <div id="paymentSection" class="hidden">
+      <h2>💳 Payment</h2>
+      <div class="payment-section">
+        <p style="color: #800000; font-weight: 600; font-size: 18px; margin-bottom: 15px;">
+          Scan the QR code below to pay or click the button
+        </p>
+        
+        <div class="qr-container">
+          <img id="qrCode" class="qr-code" alt="UPI QR Code" />
+        </div>
+        
+        <p style="color: #666; margin: 15px 0;">OR</p>
+        
+        <a href="#" id="paymentLink" class="payment-link" target="_blank">
+          📱 Click Here to Pay
+        </a>
+        
+        <p style="color: #666; font-size: 14px; margin-top: 20px;">
+          UPI ID: <strong>altina2104-2@okhdfcbank</strong>
+        </p>
+      </div>
+    </div>
+
+    <!-- Upload Section -->
+    <div id="uploadSection" class="hidden">
+      <h2>📸 Upload Payment Screenshot</h2>
+      <p class="lead">Please upload a screenshot of your UPI payment confirmation</p>
+      
+      <div class="upload-area" id="uploadArea">
+        <div class="upload-icon">📸</div>
+        <p style="color: #800000; font-weight: 600;">Click to upload or drag & drop</p>
+        <p style="color: #666; font-size: 14px;">PNG, JPG, JPEG up to 5MB</p>
+      </div>
+      
+      <input type="file" id="fileInput" accept="image/*" />
+      
+      <div id="previewContainer" class="preview-container hidden">
+        <img id="previewImage" class="preview-image" alt="Payment screenshot preview" />
+        <p style="color: #666; margin-top: 10px;">
+          <button type="button" onclick="removeImage()" style="background: none; border: none; color: #b30000; cursor: pointer; text-decoration: underline;">Remove image</button>
+        </p>
+      </div>
+      
+      <button type="button" class="btn" id="submitBtn" disabled>Submit Registration</button>
+    </div>
+
+    <!-- Proceed Button (shown initially) -->
+    <button type="button" class="btn" id="proceedBtn">Proceed to Payment</button>
   </div>
+  
+  <!-- Thank You Section -->
+  <div id="thankYouSection" class="hidden thank-you">
+    <div class="icon">🎉</div>
+    <h2>Registration Submitted Successfully!</h2>
+    <p class="lead">Thank you for registering for YuvaFiesta 2025!</p>
+    
+    <div style="background: #fff5e6; border-left: 4px solid #ffa500; padding: 15px; border-radius: 4px; text-align: left;">
+      <p class="info-text" style="margin: 0;">
+        <strong>⏳ Pending Approval</strong><br>
+        Your registration is under review. Once approved by our team, you will receive a confirmation email with your pass numbers.
+      </p>
+    </div>
+    
+    <div style="background: #e6f7ff; border-left: 4px solid #1890ff; padding: 15px; border-radius: 4px; text-align: left; margin-top: 15px;">
+      <p class="info-text" style="margin: 0;">
+        <strong>📧 Check Your Email</strong><br>
+        Please check your email (including spam folder) within 24 hours for your pass confirmation.
+      </p>
+    </div>
+    
+    <p class="info-text" style="margin-top: 20px;">
+      We're excited to see you at the event! 🎄✨
+    </p>
+  </div>
+</div>
+
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="loader"></div>
+  <p>Submitting your registration... Please wait 🎡</p>
 </div>
 
 <script>
@@ -193,24 +427,39 @@ for (let i=0; i<25; i++){
   document.body.appendChild(s);
 }
 
-// 🎟 CONFIG - Update these with your actual details
-const UPI_ID = "8369565880@pthdfc"; // Replace with your UPI ID
-const UPI_NAME = "Candida%20Noronha"; // Replace with your name (URL encoded)
+// 🎟 CONFIG
+const UPI_ID = "altina2104-2@okhdfcbank";
+const UPI_NAME = "Altina%20Dsilva";
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwXGGvNU-YUce-j_W1e9wLEoHDf-AbJ4FiWkdZF0_1gTQuaBBWOSTW5RFsDJQUS_UD8/exec";
 
-// 💰 Amount calculator
+// Store form data globally
+let formData = null;
+let selectedFile = null;
+
+// Amount calculator
 const d1 = document.getElementById('day1');
 const d2 = document.getElementById('day2');
 const amtLabel = document.getElementById('amountLabel');
+
 function updateAmount(){
   let amt=0;
   if(d1.checked && d2.checked) amt=200;
   else if(d1.checked||d2.checked) amt=100;
   amtLabel.textContent='Amount: ₹'+amt;
 }
+
 d1.onchange = d2.onchange = updateAmount;
 
-// 💳 Proceed to Payment
-document.getElementById('payBtn').onclick = function(){
+// Generate UPI QR Code
+function generateQRCode(amount) {
+  const upiString = `upi://pay?pa=${UPI_ID}&pn=${UPI_NAME}&am=${amount}.00&cu=INR&tn=YuvaFiesta%202025%20Pass`;
+  const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiString)}`;
+  document.getElementById('qrCode').src = qrApiUrl;
+  document.getElementById('paymentLink').href = upiString;
+}
+
+// Proceed to Payment
+document.getElementById('proceedBtn').onclick = function(){
   const name=document.getElementById('fullName').value.trim();
   const email=document.getElementById('email').value.trim();
   const contact=document.getElementById('contact').value.trim();
@@ -230,8 +479,8 @@ document.getElementById('payBtn').onclick = function(){
   
   const amount=(d1.checked && d2.checked)?200:100;
 
-  // Store form data in sessionStorage
-  const formData = {
+  // Store form data
+  formData = {
     fullName: name,
     email: email,
     contact: contact,
@@ -243,19 +492,143 @@ document.getElementById('payBtn').onclick = function(){
     amount: amount
   };
   
-  sessionStorage.setItem('yuvaFiestaRegistration', JSON.stringify(formData));
+  // Generate QR code and show payment section
+  generateQRCode(amount);
   
-  // Generate UPI payment link
-  const upiLink = `upi://pay?pa=${UPI_ID}&pn=${UPI_NAME}&am=${amount}.00&cu=INR&tn=YuvaFiesta%202025%20Pass`;
+  // Hide proceed button and form, show payment and upload sections
+  document.getElementById('proceedBtn').classList.add('hidden');
+  document.getElementById('ticketForm').querySelectorAll('input, select').forEach(el => el.disabled = true);
+  document.getElementById('paymentSection').classList.remove('hidden');
+  document.getElementById('uploadSection').classList.remove('hidden');
   
-  // Open UPI payment
-  window.location.href = upiLink;
-  
-  // Redirect to upload page after a short delay
-  setTimeout(() => {
-    window.location.href = 'upload.html';
-  }, 2000);
+  // Scroll to payment section
+  document.getElementById('paymentSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 };
+
+// File Upload Handling
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('fileInput');
+const previewContainer = document.getElementById('previewContainer');
+const previewImage = document.getElementById('previewImage');
+const submitBtn = document.getElementById('submitBtn');
+
+uploadArea.addEventListener('click', () => fileInput.click());
+
+fileInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) handleFile(file);
+});
+
+uploadArea.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  uploadArea.classList.add('dragover');
+});
+
+uploadArea.addEventListener('dragleave', () => {
+  uploadArea.classList.remove('dragover');
+});
+
+uploadArea.addEventListener('drop', (e) => {
+  e.preventDefault();
+  uploadArea.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) handleFile(file);
+});
+
+function handleFile(file) {
+  if (!file.type.startsWith('image/')) {
+    alert('Please upload an image file');
+    return;
+  }
+  
+  if (file.size > 5 * 1024 * 1024) {
+    alert('File size must be less than 5MB');
+    return;
+  }
+  
+  selectedFile = file;
+  
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    previewImage.src = e.target.result;
+    previewContainer.classList.remove('hidden');
+    uploadArea.style.display = 'none';
+    submitBtn.disabled = false;
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeImage() {
+  selectedFile = null;
+  previewContainer.classList.add('hidden');
+  uploadArea.style.display = 'block';
+  fileInput.value = '';
+  submitBtn.disabled = true;
+}
+
+// Submit Registration
+submitBtn.addEventListener('click', async () => {
+  if (!selectedFile) {
+    alert('Please upload a payment screenshot');
+    return;
+  }
+  
+  if (!formData) {
+    alert('Form data not found. Please refresh and try again.');
+    return;
+  }
+  
+  const overlay = document.getElementById('loadingOverlay');
+  overlay.style.display = 'flex';
+  
+  try {
+    const base64Image = await fileToBase64(selectedFile);
+    
+    const registrationData = {
+      ...formData,
+      fileName: selectedFile.name,
+      fileType: selectedFile.type,
+      fileData: base64Image.split(',')[1],
+      timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
+    };
+    
+    console.log('Submitting registration...');
+    
+    const response = await fetch(GOOGLE_SHEET_URL, {
+      method: 'POST',
+      body: JSON.stringify(registrationData),
+      headers: { 'Content-Type': 'application/json' },
+      mode: 'no-cors'
+    });
+    
+    let result;
+    try {
+      result = await response.json();
+    } catch {
+      result = {status:"success"};
+    }
+    
+    console.log('Response:', result);
+    
+    document.getElementById('formSection').classList.add('hidden');
+    document.getElementById('thankYouSection').classList.remove('hidden');
+    
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Error submitting registration. Please try again or contact support.');
+  } finally {
+    overlay.style.display = 'none';
+  }
+});
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
 </script>
 </body>
 </html>
