@@ -452,7 +452,7 @@ d1.onchange = d2.onchange = updateAmount;
 
 // Generate UPI QR Code
 function generateQRCode(amount) {
-  const upiString = `upi://pay?pa=${UPI_ID}&pn=${UPI_NAME}&am=${amount}.00&cu=INR&tn=YuvaFiesta%202025%20Pass`;
+  const upiString = `upi://pay?pa=${UPI_ID}&pn=${UPI_NAME}&am=${amount}&cu=INR&tn=YuvaFiesta%202025%20Pass`;
   const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiString)}`;
   document.getElementById('qrCode').src = qrApiUrl;
   document.getElementById('paymentLink').href = upiString;
